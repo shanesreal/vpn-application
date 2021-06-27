@@ -13,30 +13,39 @@ namespace vpn
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (comboBox1.Text == "Server" && radioButton1.Checked)
-            {
-                Process process = new Process();
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                startInfo.FileName = @"C:\Program Files\OpenVPN\bin\openvpn.exe";
-                startInfo.Arguments = "--config ukudp.ovpn";
-                startInfo.Verb = "runas";
-                process.StartInfo = startInfo;
-                process.Start();
-                MessageBox.Show("You've connected to server with udp");
+            string comboBoxText = comboBox1.GetItemText(comboBox1.Text);
+            bool serverSelected = comboBoxText != "Select your server";
 
-            } else if (comboBox1.Text == "Server" && radioButton2.Checked)
+            if (serverSelected && radioButton1.Checked)
             {
                 Process process = new Process();
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 startInfo.FileName = @"C:\Program Files\OpenVPN\bin\openvpn.exe";
-                startInfo.Arguments = "--config uktcp.ovpn";
+                startInfo.Arguments = "--config " + comboBoxText + "ukudp.ovpn";
                 startInfo.Verb = "runas";
                 process.StartInfo = startInfo;
                 process.Start();
-                MessageBox.Show("You've connected to server with tcp");
+                MessageBox.Show("You've connected to " + comboBoxText + " with udp");
+
             }
+            else if (serverSelected && radioButton2.Checked)
+            {
+                Process process = new Process();
+                ProcessStartInfo startInfo = new ProcessStartInfo();
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                startInfo.FileName = @"C:\Program Files\OpenVPN\bin\openvpn.exe";
+                startInfo.Arguments = "--config " + comboBoxText + "uktcp.ovpn";
+                startInfo.Verb = "runas";
+                process.StartInfo = startInfo;
+                process.Start();
+                MessageBox.Show("You've connected to " + comboBoxText + " with tcp");
+            }
+            else
+            {
+                MessageBox.Show("Please select a server and protocol before connecting");
+            }
+
         }
 
         private void button2_Click(object sender, EventArgs e)
